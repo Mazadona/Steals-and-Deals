@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Steals &amp; Deals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F4EBDD;
+      --surface: #fdf8f2;
+      --primary: #1a2a4a;
+      --accent: #c42b2b;
+      --accent-light: #fde8e8;
+      --teal: #1f7a78;
+      --muted: #7a6a52;
+      --border: #e0d4c0;
+      --radius: 16px;
+      --shadow: 0 4px 24px rgba(0,0,0,.08);
+      --slack: #4a154b;
+      --slack-hover: #611f64;
+      --green: #22c55e;
+      --orange: #f59e0b;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--primary);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 24px; height: 64px;
+      display: flex; align-items: center;
+    }
+    .logo {
+      font-family: 'Lobster', cursive;
+      font-size: 1.9rem;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .logo-steals, .logo-deals { color: #c42b2b; }
+    .logo-amp { color: #1a2a4a; font-size: 1.4rem; }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 1200px; margin: 0 auto;
+      padding: 64px 24px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+    .hero-text {
+      display: flex; flex-direction: column; gap: 10px;
+      flex: 1;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: var(--accent-light); color: var(--accent);
+      font-size: .8rem; font-weight: 700;
+      padding: 4px 12px; border-radius: 20px;
+      width: fit-content; letter-spacing: .5px; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800; letter-spacing: -1px; line-height: 1.15;
+    }
+    .hero p { color: var(--muted); font-size: 1.05rem; max-width: 480px; line-height: 1.6; }
+    .hero-logo {
+      flex-shrink: 0;
+      width: clamp(160px, 20vw, 240px);
+    }
+    .hero-logo img {
+      width: 100%;
+      aspect-ratio: 1;
+      display: block;
+      object-fit: cover;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 8px 32px rgba(0,0,0,.16), 0 0 0 3px #ffffff, 0 0 0 5px var(--border);
+    }
+    @media (max-width: 700px) {
+      .hero { flex-direction: column; align-items: flex-start; }
+      .hero-logo { width: 140px; align-self: flex-end; margin-top: -20px; }
+    }
+
+    /* ── FILTERS ── */
+    .filters {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 24px 32px;
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 8px 18px; border-radius: 30px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      font-size: .85rem; font-weight: 600; cursor: pointer;
+      transition: all .2s; color: var(--muted);
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--accent); background: var(--accent-light); color: var(--accent);
+    }
+
+    /* ── GRID ── */
+    .products {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 24px 80px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform .25s, box-shadow .25s;
+      position: relative;
+    }
+    .card:not(.card-sold):hover {
+      transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.11);
+    }
+    .card-sold { opacity: 0.55; }
+
+    .card-image {
+      width: 100%; aspect-ratio: 4/3;
+      object-fit: cover; background: #f0eeea; display: block;
+    }
+    img.card-image { cursor: zoom-in; }
+    .card-image.placeholder {
+      display: flex; align-items: center; justify-content: center; font-size: 3.5rem;
+    }
+
+    /* ── STATUS BADGE ── */
+    .status-badge {
+      position: absolute; top: 12px; right: 12px;
+      font-size: .7rem; font-weight: 800;
+      padding: 4px 10px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: .5px; z-index: 2;
+    }
+    .status-available { background: #dcfce7; color: #15803d; }
+    .status-reserved  { background: #fef3c7; color: #b45309; }
+    .status-sold      { background: #f3f4f6; color: #4b5563; }
+
+    /* ── SOLD OVERLAY ── */
+    .sold-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 3; pointer-events: none;
+    }
+    .sold-stamp {
+      background: var(--primary); color: #fff;
+      font-size: 1.5rem; font-weight: 900;
+      padding: 10px 26px; border-radius: 8px;
+      letter-spacing: 4px; transform: rotate(-12deg); opacity: 0.82;
+    }
+
+    /* ── PRODUCT BADGE ── */
+    .product-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: var(--accent); color: #fff;
+      font-size: .7rem; font-weight: 800;
+      padding: 3px 10px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: .5px; z-index: 2;
+    }
+
+    .card-body {
+      padding: 20px; flex: 1;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .card-category {
+      font-size: .72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .6px; color: var(--accent);
+    }
+    .card-name  { font-size: 1.05rem; font-weight: 700; letter-spacing: -.2px; }
+    .card-desc  { font-size: .88rem; color: var(--muted); line-height: 1.55; flex: 1; }
+
+    .card-footer {
+      padding: 0 20px 20px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .price { font-size: 1.3rem; font-weight: 800; letter-spacing: -.5px; }
+    .price .orig {
+      font-size: .85rem; color: var(--muted);
+      text-decoration: line-through; font-weight: 500; margin-left: 6px;
+    }
+
+    /* ── ACTION BUTTONS ── */
+    .action-buttons { display: flex; gap: 8px; }
+
+    .btn-enquire, .btn-buy {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      border: none; border-radius: 10px; padding: 11px 8px;
+      font-size: .82rem; font-weight: 700; cursor: pointer;
+      transition: background .2s, transform .1s; color: #fff;
+    }
+    .btn-enquire:active, .btn-buy:active { transform: scale(.97); }
+    .btn-enquire { background: var(--teal); }
+    .btn-enquire:hover { background: #176361; }
+    .btn-buy { background: var(--slack); }
+    .btn-buy:hover { background: var(--slack-hover); }
+
+    .btn-reserved-display {
+      background: #fef3c7; color: #b45309;
+      border: none; border-radius: 10px;
+      padding: 11px 14px; font-size: .82rem; font-weight: 700;
+      cursor: default; text-align: center;
+    }
+    .btn-sold-display {
+      background: #f3f4f6; color: #6b7280;
+      border: none; border-radius: 10px;
+      padding: 11px 14px; font-size: .82rem; font-weight: 700;
+      cursor: default; text-align: center;
+    }
+
+    /* ── MESSAGE MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.5); backdrop-filter: blur(4px);
+      z-index: 200; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--surface); border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.2);
+      padding: 32px; width: 100%; max-width: 460px;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: var(--border); border: none; border-radius: 8px;
+      padding: 6px 10px; cursor: pointer; font-size: .85rem; font-weight: 700;
+    }
+    .modal-type-tag {
+      display: inline-block; font-size: .72rem; font-weight: 800;
+      padding: 3px 10px; border-radius: 20px; margin-bottom: 12px;
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+    .tag-enquire { background: #d4f0ef; color: var(--teal); }
+    .tag-buy     { background: #f3e8ff; color: var(--slack); }
+
+    .modal-box h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 4px; }
+    .modal-box .modal-sub {
+      font-size: .85rem; color: var(--muted); margin-bottom: 18px; line-height: 1.5;
+    }
+
+    .message-preview {
+      background: #f8f7f4; border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 14px 16px;
+      font-size: .88rem; line-height: 1.7;
+      color: var(--primary); margin-bottom: 16px;
+      white-space: pre-wrap; font-family: inherit;
+    }
+    .message-preview strong { font-weight: 700; }
+
+    .modal-actions { display: flex; gap: 10px; }
+    .btn-copy {
+      flex: 1; padding: 12px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      font-size: .88rem; font-weight: 700; cursor: pointer;
+      transition: all .15s; color: var(--primary);
+    }
+    .btn-copy:hover { border-color: var(--primary); }
+    .btn-copy.copied { border-color: var(--green); color: var(--green); }
+
+    .btn-open-slack {
+      flex: 1; padding: 12px; border-radius: 10px;
+      border: none; background: var(--slack); color: #fff;
+      font-size: .88rem; font-weight: 700; cursor: pointer;
+      transition: background .2s; display: flex; align-items: center;
+      justify-content: center; gap: 6px;
+    }
+    .btn-open-slack:hover { background: var(--slack-hover); }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--primary); color: #fff;
+      padding: 14px 24px; border-radius: 12px;
+      font-size: .9rem; font-weight: 600;
+      box-shadow: 0 8px 30px rgba(0,0,0,.18);
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+      z-index: 999; pointer-events: none;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── LIGHTBOX ── */
+    #lightbox {
+      display: none; position: fixed; inset: 0; z-index: 300;
+      background: rgba(0,0,0,.88); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center; padding: 20px; cursor: zoom-out;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: min(90vw, 900px); max-height: 90vh;
+      object-fit: contain; border-radius: 12px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.5); cursor: default;
+    }
+    #lightbox-close {
+      position: fixed; top: 20px; right: 24px;
+      background: rgba(255,255,255,.15); border: none; color: #fff;
+      font-size: 1.4rem; width: 40px; height: 40px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    #lightbox-close:hover { background: rgba(255,255,255,.3); }
+
+    /* ── SPECIAL PAGES ── */
+    .special-page {
+      min-height: calc(100vh - 64px);
+      display: flex; align-items: center; justify-content: center; padding: 40px 24px;
+    }
+    .special-card {
+      background: var(--surface); border-radius: 24px;
+      box-shadow: var(--shadow); padding: 48px 40px;
+      max-width: 480px; width: 100%; text-align: center;
+    }
+    .special-card .sp-icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .special-card h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 10px; }
+    .special-card p { color: var(--muted); font-size: .95rem; line-height: 1.7; margin-bottom: 28px; }
+    .special-card p strong { color: var(--primary); }
+    .confirm-btn {
+      background: var(--green); color: #fff; border: none;
+      border-radius: 12px; padding: 16px 40px;
+      font-size: 1rem; font-weight: 800; cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+    .confirm-btn:hover { background: #16a34a; }
+    .confirm-btn:active { transform: scale(.97); }
+    .confirm-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
+
+    /* ── ADMIN PANEL ── */
+    .admin-wrap { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    .admin-header { margin-bottom: 32px; }
+    .admin-header h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 6px; }
+    .admin-header p { color: var(--muted); font-size: .9rem; line-height: 1.5; }
+
+    .admin-section-title {
+      font-size: 1rem; font-weight: 800; letter-spacing: -.2px;
+      margin: 28px 0 14px; color: var(--primary);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .admin-item {
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 18px 20px;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .admin-thumb-img {
+      width: 52px; height: 52px; border-radius: 10px;
+      object-fit: cover; flex-shrink: 0;
+    }
+    .admin-thumb-emoji { font-size: 2.2rem; flex-shrink: 0; }
+    .admin-item-info { flex: 1; min-width: 160px; }
+    .admin-item-info strong {
+      display: block; font-size: .95rem; font-weight: 700;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px;
+    }
+    .admin-item-info span { font-size: .82rem; color: var(--muted); }
+    .admin-controls { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+
+    .status-toggle {
+      padding: 7px 13px; border-radius: 8px;
+      border: 2px solid var(--border); background: var(--bg);
+      font-size: .78rem; font-weight: 700; cursor: pointer;
+      transition: all .15s; color: var(--muted);
+    }
+    .status-toggle:hover { border-color: #aaa; }
+    .st-available { border-color: #22c55e !important; background: #dcfce7 !important; color: #15803d !important; }
+    .st-reserved  { border-color: #f59e0b !important; background: #fef3c7 !important; color: #b45309 !important; }
+    .st-sold      { border-color: #6b7280 !important; background: #f3f4f6 !important; color: #374151 !important; }
+
+    .admin-copy-btn {
+      padding: 7px 12px; border-radius: 8px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      font-size: .78rem; font-weight: 700; cursor: pointer;
+      color: var(--primary); transition: all .15s;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .admin-copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .reservation-timer {
+      font-size: .78rem; font-weight: 700; color: #b45309;
+      background: #fef3c7; padding: 4px 10px; border-radius: 8px;
+    }
+
+    /* ── ENQUIRIES TABLE ── */
+    .enquiry-row {
+      background: var(--surface); border-radius: 12px;
+      box-shadow: var(--shadow); padding: 14px 18px;
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 10px; flex-wrap: wrap;
+    }
+    .enquiry-emoji { font-size: 1.5rem; flex-shrink: 0; }
+    .enquiry-info { flex: 1; min-width: 140px; }
+    .enquiry-info strong { display: block; font-size: .9rem; font-weight: 700; }
+    .enquiry-info span { font-size: .8rem; color: var(--muted); }
+    .enquiry-time { font-size: .78rem; color: var(--muted); white-space: nowrap; }
+    .no-enquiries { color: var(--muted); font-size: .9rem; padding: 16px 0; }
+
+    @media (max-width: 600px) {
+      .hero { padding-top: 40px; }
+      .special-card { padding: 32px 20px; }
+      .modal-box { padding: 24px; }
+    }
+    @media (max-width: 440px) {
+      .action-buttons { flex-direction: column; }
+      .modal-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">
+      <span class="logo-steals">Steals</span>
+      <span class="logo-amp">&amp;</span>
+      <span class="logo-deals">Deals</span>
+    </div>
+  </div>
+</nav>
+
+<div id="app"></div>
+<div id="toast"></div>
+
+<!-- Message modal -->
+<div class="modal-overlay" id="msg-modal" onclick="closeModalOutside(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <span class="modal-type-tag" id="modal-tag"></span>
+    <h3 id="modal-title"></h3>
+    <p class="modal-sub" id="modal-sub"></p>
+    <div class="message-preview" id="modal-message"></div>
+    <div class="modal-actions">
+      <button class="btn-copy" id="modal-copy-btn" onclick="copyModalMessage()">📋 Copy message</button>
+      <button class="btn-open-slack" onclick="openSlackFromModal()">
+        <svg width="13" height="13" viewBox="0 0 54 54" fill="currentColor">
+          <path d="M19.712.133a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386h5.376V5.52A5.381 5.381 0 0 0 19.712.133m0 14.365H5.376A5.381 5.381 0 0 0 0 19.884a5.381 5.381 0 0 0 5.376 5.387h14.336a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386"/>
+          <path d="M53.76 19.884a5.381 5.381 0 0 0-5.376-5.386 5.381 5.381 0 0 0-5.376 5.386v5.387h5.376a5.381 5.381 0 0 0 5.376-5.387m-14.336 0V5.52A5.381 5.381 0 0 0 34.048.133a5.381 5.381 0 0 0-5.376 5.387v14.364a5.381 5.381 0 0 0 5.376 5.387 5.381 5.381 0 0 0 5.376-5.387"/>
+          <path d="M34.048 54a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386h-5.376v5.386A5.381 5.381 0 0 0 34.048 54m0-14.365h14.336a5.381 5.381 0 0 0 5.376-5.386 5.381 5.381 0 0 0-5.376-5.387H34.048a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386"/>
+          <path d="M0 34.249a5.381 5.381 0 0 0 5.376 5.386 5.381 5.381 0 0 0 5.376-5.386v-5.387H5.376A5.381 5.381 0 0 0 0 34.249m14.336 0v14.364A5.381 5.381 0 0 0 19.712 54a5.381 5.381 0 0 0 5.376-5.387V34.249a5.381 5.381 0 0 0-5.376-5.387 5.381 5.381 0 0 0-5.376 5.387"/>
+        </svg>
+        Open Slack DM
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" onclick="closeLightbox(event)">
+  <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+  // ══════════════════════════════════════════════════════════════
+  // CONFIG
+  // ══════════════════════════════════════════════════════════════
+  const FIREBASE_URL  = "https://YOUR-PROJECT-default-rtdb.firebaseio.com";
+  const SLACK_DM_URL  = "https://canva.enterprise.slack.com/messages/U03N5D7UDC5";
+  const SELLER_NAME   = "Maz";
+  const RESERVATION_HOURS = 2;
+
+  // ══════════════════════════════════════════════════════════════
+  // PRODUCT DATA
+  // ══════════════════════════════════════════════════════════════
+  const products = [
+    {
+      id: 1,
+      name: "Wireless Noise-Cancelling Headphones",
+      desc: "Studio-quality sound with 30-hour battery life and plush over-ear cushions. Perfect for music lovers and remote workers.",
+      price: 149.99, origPrice: 199.99,
+      emoji: "🎧", category: "electronics", badge: "Sale",
+    },
+    {
+      id: 2,
+      name: "Minimalist Leather Sneakers",
+      desc: "Handcrafted from full-grain leather with a cushioned insole. Pairs effortlessly with any outfit.",
+      price: 89.00, origPrice: null,
+      emoji: "👟", category: "fashion",
+    },
+    {
+      id: 3,
+      name: "Smart LED Desk Lamp",
+      desc: "Adjustable color temperature (2700K–6500K), USB-C charging port, and memory function. Illuminate your workspace.",
+      price: 49.99, origPrice: null,
+      emoji: "💡", category: "home",
+    },
+    {
+      id: 4,
+      name: "Stainless Steel Water Bottle",
+      desc: "Triple-wall insulation keeps drinks cold 24 hrs and hot 12 hrs. Leak-proof lid, 32 oz capacity.",
+      price: 34.95, origPrice: null,
+      emoji: "🍶", category: "sports", badge: "Best Seller",
+    },
+    {
+      id: 5,
+      name: "Womens Dawn Patrol 4/3 Back Zip Steamer Wetsuit",
+      desc: "Size 12. Flexible E5 and E4 neoprene with flash lining for warmth and comfort, natural rubber-based foam and recycled linings, durable GB seams with critical stress point taping.",
+      price: 200.00, origPrice: 450.00,
+      image: "Wetsuit.jpg", category: "fashion", badge: "Sale",
+    },
+    {
+      id: 6,
+      name: "Portable Bluetooth Speaker",
+      desc: "360° surround sound, IP67 waterproof, 20-hour playtime. Take the party anywhere.",
+      price: 79.99, origPrice: 99.99,
+      emoji: "🔊", category: "electronics", badge: "Sale",
+    },
+    {
+      id: 7,
+      name: "Ceramic Pour-Over Coffee Set",
+      desc: "Hand-thrown ceramic dripper, carafe, and two mugs. Brews a clean, smooth cup every time.",
+      price: 64.00, origPrice: null,
+      emoji: "☕", category: "home",
+    },
+    {
+      id: 8,
+      name: "Yoga Mat — 6mm Thick",
+      desc: "Non-slip natural rubber base, sweat-resistant top, includes carry strap. Supports every pose.",
+      price: 45.00, origPrice: null,
+      emoji: "🧘", category: "sports",
+    },
+  ];
+
+  // ══════════════════════════════════════════════════════════════
+  // FIREBASE
+  // ══════════════════════════════════════════════════════════════
+  let statuses     = {};
+  let reservations = {};
+
+  async function loadStatuses() {
+    try {
+      const [sRes, rRes] = await Promise.all([
+        fetch(`${FIREBASE_URL}/statuses.json`),
+        fetch(`${FIREBASE_URL}/reservations.json`),
+      ]);
+      statuses     = (await sRes.json()) || {};
+      reservations = (await rRes.json()) || {};
+    } catch {
+      statuses = {}; reservations = {};
+    }
+    // Auto-expire reservations that have passed
+    const now = Date.now();
+    for (const [id, expiry] of Object.entries(reservations)) {
+      if (statuses[id] === "reserved" && new Date(expiry).getTime() < now) {
+        statuses[id] = "available";
+        setFirebase(`statuses/${id}`, "available");
+        deleteFirebase(`reservations/${id}`);
+      }
+    }
+  }
+
+  async function setFirebase(path, value) {
+    try {
+      await fetch(`${FIREBASE_URL}/${path}.json`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(value),
+      });
+    } catch {
+      showToast("⚠️ Could not save — check Firebase URL in config.");
+    }
+  }
+
+  async function deleteFirebase(path) {
+    try {
+      await fetch(`${FIREBASE_URL}/${path}.json`, { method: "DELETE" });
+    } catch {}
+  }
+
+  async function pushFirebase(path, value) {
+    try {
+      await fetch(`${FIREBASE_URL}/${path}.json`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(value),
+      });
+    } catch {}
+  }
+
+  function getStatus(id) { return statuses[id] || "available"; }
+
+  function getReservationExpiry(id) { return reservations[id] || null; }
+
+  function formatExpiry(isoString) {
+    const d = new Date(isoString);
+    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // SHOP PAGE
+  // ══════════════════════════════════════════════════════════════
+  let activeFilter = "all";
+
+  function renderShop() {
+    document.getElementById("app").innerHTML = `
+      <section class="hero">
+        <div class="hero-text">
+          <span class="hero-tag">Everything Must Go!</span>
+          <h1>Find what you<br/>love. Steal it!</h1>
+          <p>Huge savings today! Browse our items and reach out via Slack to enquire or buy. We'll get back to you right away.</p>
+        </div>
+      </section>
+      <div class="filters">
+        <button class="filter-btn active" onclick="applyFilter('all',this)">All</button>
+        <button class="filter-btn" onclick="applyFilter('electronics',this)">Electronics</button>
+        <button class="filter-btn" onclick="applyFilter('fashion',this)">Fashion</button>
+        <button class="filter-btn" onclick="applyFilter('home',this)">Home</button>
+        <button class="filter-btn" onclick="applyFilter('sports',this)">Sports</button>
+      </div>
+      <div class="products" id="product-grid"></div>
+    `;
+    renderGrid();
+  }
+
+  function renderGrid() {
+    const list = activeFilter === "all"
+      ? products
+      : products.filter(p => p.category === activeFilter);
+
+    const grid = document.getElementById("product-grid");
+    if (!grid) return;
+
+    grid.innerHTML = list.map(p => {
+      const status     = getStatus(p.id);
+      const isSold     = status === "sold";
+      const isReserved = status === "reserved";
+      const expiry     = getReservationExpiry(p.id);
+
+      const imgHtml = p.image
+        ? `<img class="card-image" src="${p.image}" alt="${p.name}" onclick="openLightbox('${p.image}','${p.name.replace(/'/g,"\\'")}')"/>`
+        : `<div class="card-image placeholder">${p.emoji}</div>`;
+
+      let statusLabel;
+      if (isSold) {
+        statusLabel = "✗ Sold";
+      } else if (isReserved && expiry) {
+        statusLabel = `⏳ Reserved until ${formatExpiry(expiry)}`;
+      } else if (isReserved) {
+        statusLabel = "⏳ Reserved";
+      } else {
+        statusLabel = "✓ Available";
+      }
+
+      let footerActions;
+      if (isSold) {
+        footerActions = `<div class="btn-sold-display">✗ This item has been sold</div>`;
+      } else if (isReserved) {
+        footerActions = `<div class="btn-reserved-display">⏳ Reserved${expiry ? ` until ${formatExpiry(expiry)}` : ""} — check back soon</div>`;
+      } else {
+        footerActions = `
+          <div class="action-buttons">
+            <button class="btn-enquire" onclick="openEnquireModal(${p.id})">
+              <svg width="13" height="13" viewBox="0 0 54 54" fill="currentColor">
+                <path d="M19.712.133a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386h5.376V5.52A5.381 5.381 0 0 0 19.712.133m0 14.365H5.376A5.381 5.381 0 0 0 0 19.884a5.381 5.381 0 0 0 5.376 5.387h14.336a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386"/>
+                <path d="M53.76 19.884a5.381 5.381 0 0 0-5.376-5.386 5.381 5.381 0 0 0-5.376 5.386v5.387h5.376a5.381 5.381 0 0 0 5.376-5.387m-14.336 0V5.52A5.381 5.381 0 0 0 34.048.133a5.381 5.381 0 0 0-5.376 5.387v14.364a5.381 5.381 0 0 0 5.376 5.387 5.381 5.381 0 0 0 5.376-5.387"/>
+                <path d="M34.048 54a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386h-5.376v5.386A5.381 5.381 0 0 0 34.048 54m0-14.365h14.336a5.381 5.381 0 0 0 5.376-5.386 5.381 5.381 0 0 0-5.376-5.387H34.048a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386"/>
+                <path d="M0 34.249a5.381 5.381 0 0 0 5.376 5.386 5.381 5.381 0 0 0 5.376-5.386v-5.387H5.376A5.381 5.381 0 0 0 0 34.249m14.336 0v14.364A5.381 5.381 0 0 0 19.712 54a5.381 5.381 0 0 0 5.376-5.387V34.249a5.381 5.381 0 0 0-5.376-5.387 5.381 5.381 0 0 0-5.376 5.387"/>
+              </svg>
+              Enquire
+            </button>
+            <button class="btn-buy" onclick="openBuyModal(${p.id})">
+              <svg width="13" height="13" viewBox="0 0 54 54" fill="currentColor">
+                <path d="M19.712.133a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386h5.376V5.52A5.381 5.381 0 0 0 19.712.133m0 14.365H5.376A5.381 5.381 0 0 0 0 19.884a5.381 5.381 0 0 0 5.376 5.387h14.336a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386"/>
+                <path d="M53.76 19.884a5.381 5.381 0 0 0-5.376-5.386 5.381 5.381 0 0 0-5.376 5.386v5.387h5.376a5.381 5.381 0 0 0 5.376-5.387m-14.336 0V5.52A5.381 5.381 0 0 0 34.048.133a5.381 5.381 0 0 0-5.376 5.387v14.364a5.381 5.381 0 0 0 5.376 5.387 5.381 5.381 0 0 0 5.376-5.387"/>
+                <path d="M34.048 54a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386h-5.376v5.386A5.381 5.381 0 0 0 34.048 54m0-14.365h14.336a5.381 5.381 0 0 0 5.376-5.386 5.381 5.381 0 0 0-5.376-5.387H34.048a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386"/>
+                <path d="M0 34.249a5.381 5.381 0 0 0 5.376 5.386 5.381 5.381 0 0 0 5.376-5.386v-5.387H5.376A5.381 5.381 0 0 0 0 34.249m14.336 0v14.364A5.381 5.381 0 0 0 19.712 54a5.381 5.381 0 0 0 5.376-5.387V34.249a5.381 5.381 0 0 0-5.376-5.387 5.381 5.381 0 0 0-5.376 5.387"/>
+              </svg>
+              Buy
+            </button>
+          </div>`;
+      }
+
+      return `
+        <div class="card${isSold ? " card-sold" : ""}">
+          ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ""}
+          <span class="status-badge status-${status}">${statusLabel}</span>
+          ${imgHtml}
+          ${isSold ? `<div class="sold-overlay"><div class="sold-stamp">SOLD</div></div>` : ""}
+          <div class="card-body">
+            <span class="card-category">${p.category}</span>
+            <div class="card-name">${p.name}</div>
+            <div class="card-desc">${p.desc}</div>
+          </div>
+          <div class="card-footer">
+            <div class="price">
+              $${p.price.toFixed(2)}
+              ${p.origPrice ? `<span class="orig">$${p.origPrice.toFixed(2)}</span>` : ""}
+            </div>
+            ${footerActions}
+          </div>
+        </div>`;
+    }).join("");
+  }
+
+  function applyFilter(cat, btn) {
+    activeFilter = cat;
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderGrid();
+  }
+
+  function pageUrl() {
+    return window.location.origin + window.location.pathname;
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // ENQUIRE MODAL
+  // ══════════════════════════════════════════════════════════════
+  async function openEnquireModal(id) {
+    const p = products.find(x => x.id === id);
+    const msg = `Hi ${SELLER_NAME}, I have a question about:\nItem: ${p.name}\nPrice: $${p.price.toFixed(2)}\nLink: ${pageUrl()}`;
+    showModal({
+      tag: "enquire", tagLabel: "Enquire",
+      title: p.name,
+      sub: "Copy the message below, then open your Slack DM to send it.",
+      message: msg,
+    });
+    // Log enquiry to Firebase (fire and forget)
+    pushFirebase(`enquiries/${id}`, {
+      item: p.name,
+      price: p.price,
+      time: new Date().toISOString(),
+    });
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // BUY MODAL
+  // ══════════════════════════════════════════════════════════════
+  function openBuyModal(id) {
+    const p = products.find(x => x.id === id);
+    const msg = `I would like to buy:\nItem: ${p.name}\nPrice: $${p.price.toFixed(2)}\nI understand it will be reserved for ${RESERVATION_HOURS} hours once you confirm.`;
+    showModal({
+      tag: "buy", tagLabel: "Buy",
+      title: p.name,
+      sub: "Copy the message below, then open your Slack DM to send it.",
+      message: msg,
+    });
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // MODAL ENGINE
+  // ══════════════════════════════════════════════════════════════
+  let currentModalMessage = "";
+
+  function showModal({ tag, tagLabel, title, sub, message }) {
+    currentModalMessage = message;
+    const tagEl = document.getElementById("modal-tag");
+    tagEl.textContent = tagLabel;
+    tagEl.className = `modal-type-tag tag-${tag}`;
+    document.getElementById("modal-title").textContent = title;
+    document.getElementById("modal-sub").textContent   = sub;
+    document.getElementById("modal-message").textContent = message;
+    const copyBtn = document.getElementById("modal-copy-btn");
+    copyBtn.textContent = "📋 Copy message";
+    copyBtn.classList.remove("copied");
+    document.getElementById("msg-modal").classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    document.getElementById("msg-modal").classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function closeModalOutside(e) {
+    if (e.target === document.getElementById("msg-modal")) closeModal();
+  }
+
+  function copyModalMessage() {
+    navigator.clipboard.writeText(currentModalMessage).then(() => {
+      const btn = document.getElementById("modal-copy-btn");
+      btn.textContent = "✓ Copied!";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.textContent = "📋 Copy message";
+        btn.classList.remove("copied");
+      }, 2000);
+    });
+  }
+
+  function openSlackFromModal() {
+    window.open(SLACK_DM_URL, "_blank");
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // CONFIRM RECEIPT PAGE  (?confirm=ID)
+  // ══════════════════════════════════════════════════════════════
+  function renderConfirmPage(id) {
+    const p      = products.find(x => x.id === id);
+    const status = getStatus(id);
+
+    if (!p) {
+      document.getElementById("app").innerHTML = `
+        <div class="special-page"><div class="special-card">
+          <div class="sp-icon">❓</div>
+          <h2>Invalid link</h2>
+          <p>This confirmation link doesn't match any item.</p>
+        </div></div>`;
+      return;
+    }
+
+    if (status === "sold") {
+      document.getElementById("app").innerHTML = `
+        <div class="special-page"><div class="special-card">
+          <div class="sp-icon">✅</div>
+          <h2>Already confirmed!</h2>
+          <p>Receipt for <strong>${p.name}</strong> was already confirmed. Thank you!</p>
+        </div></div>`;
+      return;
+    }
+
+    document.getElementById("app").innerHTML = `
+      <div class="special-page"><div class="special-card">
+        <div class="sp-icon">📦</div>
+        <h2>Did you receive your item?</h2>
+        <p>Please confirm you've received:<br/>
+        <strong>${p.name}</strong><br/>
+        <span style="font-size:.9rem;">$${p.price.toFixed(2)}</span></p>
+        <button class="confirm-btn" id="confirm-btn" onclick="confirmReceipt(${id})">
+          ✓ Yes, I received it!
+        </button>
+      </div></div>`;
+  }
+
+  async function confirmReceipt(id) {
+    const btn = document.getElementById("confirm-btn");
+    btn.disabled = true; btn.textContent = "Saving…";
+    statuses[id] = "sold";
+    await setFirebase(`statuses/${id}`, "sold");
+    await deleteFirebase(`reservations/${id}`);
+    document.getElementById("app").innerHTML = `
+      <div class="special-page"><div class="special-card">
+        <div class="sp-icon">🎉</div>
+        <h2>Thank you!</h2>
+        <p>Your receipt is confirmed. Enjoy your item!</p>
+      </div></div>`;
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // ADMIN PANEL  (?admin=true)
+  // ══════════════════════════════════════════════════════════════
+  async function renderAdminPanel() {
+    document.getElementById("app").innerHTML = `
+      <div class="admin-wrap">
+        <div class="admin-header">
+          <h2>🔧 Admin Panel</h2>
+          <p>
+            <strong>Reserve (2 hrs)</strong> — marks item as reserved for 2 hours and gives you a message to paste back to the buyer.<br/>
+            <strong>Mark Sold</strong> — greys out item and gives you a "SOLD" notification to post.<br/>
+            <strong>📋 Confirm link</strong> — link to send the buyer so they can confirm receipt.
+          </p>
+        </div>
+        <div class="admin-section-title">📦 Inventory</div>
+        <div id="admin-list"></div>
+        <div class="admin-section-title">💬 Recent Enquiries</div>
+        <div id="enquiries-list"><em style="color:var(--muted);font-size:.9rem;">Loading…</em></div>
+      </div>`;
+    renderAdminList();
+    loadEnquiries();
+  }
+
+  function renderAdminList() {
+    const el = document.getElementById("admin-list");
+    if (!el) return;
+    el.innerHTML = products.map(p => {
+      const status = getStatus(p.id);
+      const expiry = getReservationExpiry(p.id);
+      const thumb  = p.image
+        ? `<img class="admin-thumb-img" src="${p.image}" alt="${p.name}" />`
+        : `<span class="admin-thumb-emoji">${p.emoji}</span>`;
+
+      const timerHtml = (status === "reserved" && expiry)
+        ? `<span class="reservation-timer">⏳ until ${formatExpiry(expiry)}</span>`
+        : "";
+
+      return `
+        <div class="admin-item">
+          ${thumb}
+          <div class="admin-item-info">
+            <strong title="${p.name}">${p.name}</strong>
+            <span>$${p.price.toFixed(2)} · ${p.category}</span>
+          </div>
+          <div class="admin-controls">
+            <button class="status-toggle ${status === "available" ? "st-available" : ""}"
+              onclick="adminSet(${p.id},'available')">✓ Available</button>
+            <button class="status-toggle ${status === "reserved" ? "st-reserved" : ""}"
+              onclick="adminReserve(${p.id})">⏳ Reserve 2hrs</button>
+            <button class="status-toggle ${status === "sold" ? "st-sold" : ""}"
+              onclick="adminSold(${p.id})">✗ Sold</button>
+            ${timerHtml}
+            <button class="admin-copy-btn" onclick="copyReservedMsg(${p.id})" title="Copy message to send buyer">💬 Reserved msg</button>
+            <button class="admin-copy-btn" onclick="copySoldMsg(${p.id})" title="Copy sold notification">🎉 Sold msg</button>
+            <button class="admin-copy-btn" onclick="copyConfirmLink(${p.id})" title="Copy buyer confirmation link">📋 Confirm link</button>
+          </div>
+        </div>`;
+    }).join("");
+  }
+
+  async function adminSet(id, status) {
+    statuses[id] = status;
+    await setFirebase(`statuses/${id}`, status);
+    if (status !== "reserved") {
+      delete reservations[id];
+      await deleteFirebase(`reservations/${id}`);
+    }
+    renderAdminList();
+    showToast(`Saved: ${status}`);
+  }
+
+  async function adminReserve(id) {
+    const expiry = new Date(Date.now() + RESERVATION_HOURS * 60 * 60 * 1000).toISOString();
+    statuses[id]     = "reserved";
+    reservations[id] = expiry;
+    await setFirebase(`statuses/${id}`, "reserved");
+    await setFirebase(`reservations/${id}`, expiry);
+    renderAdminList();
+    showToast(`Reserved until ${formatExpiry(expiry)}`);
+  }
+
+  async function adminSold(id) {
+    statuses[id] = "sold";
+    delete reservations[id];
+    await setFirebase(`statuses/${id}`, "sold");
+    await deleteFirebase(`reservations/${id}`);
+    renderAdminList();
+    showToast("Marked as sold");
+  }
+
+  function copyReservedMsg(id) {
+    const p      = products.find(x => x.id === id);
+    const expiry = getReservationExpiry(id);
+    const time   = expiry ? formatExpiry(expiry) : `${RESERVATION_HOURS} hours from now`;
+    const msg    = `🟡 Reserved until ${time}\n\nHi! I've reserved *${p.name}* for you. It will be held until ${time}. Let me know if you have any questions!`;
+    copyText(msg, "💬 Reserved message copied! Paste it in Slack.");
+  }
+
+  function copySoldMsg(id) {
+    const p   = products.find(x => x.id === id);
+    const msg = `🎉 SOLD — ${p.name}\n\nThanks for your purchase!`;
+    copyText(msg, "🎉 Sold message copied! Paste it in Slack.");
+  }
+
+  function copyConfirmLink(id) {
+    copyText(`${pageUrl()}?confirm=${id}`, "✓ Confirmation link copied — send it to your buyer!");
+  }
+
+  function copyText(text, successMsg) {
+    navigator.clipboard.writeText(text)
+      .then(() => showToast(successMsg))
+      .catch(() => showToast("Could not copy — please copy manually."));
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // ENQUIRIES LIST (admin)
+  // ══════════════════════════════════════════════════════════════
+  async function loadEnquiries() {
+    const el = document.getElementById("enquiries-list");
+    if (!el) return;
+    try {
+      const res  = await fetch(`${FIREBASE_URL}/enquiries.json`);
+      const data = await res.json();
+      if (!data) { el.innerHTML = `<p class="no-enquiries">No enquiries yet.</p>`; return; }
+
+      const rows = [];
+      for (const [itemId, entries] of Object.entries(data)) {
+        if (!entries) continue;
+        for (const [, entry] of Object.entries(entries)) {
+          rows.push({ ...entry, itemId: parseInt(itemId) });
+        }
+      }
+      rows.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+      if (!rows.length) { el.innerHTML = `<p class="no-enquiries">No enquiries yet.</p>`; return; }
+
+      el.innerHTML = rows.slice(0, 20).map(r => {
+        const p = products.find(x => x.id === r.itemId);
+        const icon = p?.image
+          ? `<img src="${p.image}" style="width:36px;height:36px;border-radius:8px;object-fit:cover;" />`
+          : `<span class="enquiry-emoji">${p?.emoji || "❓"}</span>`;
+        const t = new Date(r.time);
+        const timeStr = t.toLocaleDateString() + " " + t.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        return `
+          <div class="enquiry-row">
+            ${icon}
+            <div class="enquiry-info">
+              <strong>${r.item}</strong>
+              <span>$${r.price?.toFixed(2)}</span>
+            </div>
+            <span class="enquiry-time">${timeStr}</span>
+          </div>`;
+      }).join("");
+    } catch {
+      el.innerHTML = `<p class="no-enquiries">Could not load enquiries.</p>`;
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // LIGHTBOX
+  // ══════════════════════════════════════════════════════════════
+  function openLightbox(src, alt) {
+    document.getElementById("lightbox-img").src = src;
+    document.getElementById("lightbox-img").alt = alt;
+    document.getElementById("lightbox").classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeLightbox(e) {
+    if (e && e.target === document.getElementById("lightbox-img")) return;
+    document.getElementById("lightbox").classList.remove("open");
+    document.body.style.overflow = "";
+  }
+  document.addEventListener("keydown", e => { if (e.key === "Escape") { closeLightbox(); closeModal(); } });
+
+  // ══════════════════════════════════════════════════════════════
+  // TOAST
+  // ══════════════════════════════════════════════════════════════
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // INIT
+  // ══════════════════════════════════════════════════════════════
+  async function init() {
+    await loadStatuses();
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("confirm")) {
+      renderConfirmPage(parseInt(params.get("confirm")));
+    } else if (params.has("admin")) {
+      renderAdminPanel();
+    } else {
+      renderShop();
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
