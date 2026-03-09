@@ -562,7 +562,7 @@
       name: "Womens Dawn Patrol 4/3 Back Zip Steamer Wetsuit",
       desc: "Size 12. Flexible E5 and E4 neoprene with flash lining for warmth and comfort, natural rubber-based foam and recycled linings, durable GB seams with critical stress point taping.",
       price: 200.00, origPrice: 450.00,
-      images: ["Wetsuit.jpg", "Wetsuit 1.jpg", "wetsuit 2.jpg", "Wetsuit tag.jpg"],   // add more: ["Wetsuit.jpg", "Wetsuit2.jpg", "Wetsuit3.jpg"]
+      images: ["Wetsuit.jpg", "Wetsuit 1.jpg", "wetsuit 2.jpg", "Wetsuit tag.jpg"],
       category: "fashion", badge: "Sale",
     },
     {
@@ -577,7 +577,7 @@
       name: "Trigger Point Grid 1.0 Foam Roller",
       desc: "TriggerPoint Foam Roller (Pink) ideal for muscle recovery, stretching, and relieving tight muscles after workouts.Durable, lightweight, and great for home use, yoga, or physiotherapy.",
       price: 30.00, origPrice: null,
-      images: ["Trigger point.jpg"], category: "Sports",
+      images: ["Trigger point.jpg"], category: "sports",
     },
     {
       id: 8,
@@ -585,6 +585,89 @@
       desc: "Non-slip natural rubber base, sweat-resistant top, includes carry strap. Supports every pose.",
       price: 45.00, origPrice: null,
       emoji: "🧘", category: "sports",
+    },
+    // ── HOME ──────────────────────────────────────────────────
+    {
+      id: 9,
+      name: "Breville Kettle",
+      desc: "1.7L BPA-free electric kettle. Clean and in great working condition.",
+      price: 25.00, origPrice: null,
+      images: ["Breville Kettle.jpg", "Breville Kettle 1.jpg"],
+      category: "home",
+    },
+    {
+      id: 10,
+      name: "Stanley Tumbler — Pink",
+      desc: "40oz Stanley Adventure Quencher. Keeps drinks cold all day. Includes straw. Barely used.",
+      price: 35.00, origPrice: null,
+      images: ["Stanley.jpg", "Stanley 1.jpg", "Stanley 2.jpg"],
+      category: "home",
+    },
+    {
+      id: 11,
+      name: "Glass Candle Holders — Set of 6",
+      desc: "Ribbed glass tealight holders in green, pink, and dark purple. Perfect for decorating.",
+      price: 15.00, origPrice: null,
+      images: ["Candles holders.jpg"],
+      category: "home",
+    },
+    {
+      id: 12,
+      name: "IKEA Salad Spinner",
+      desc: "Crisp & fresh salad spinner. Clean condition, works perfectly.",
+      price: 10.00, origPrice: null,
+      images: ["Quick Share Jun 08 2025 (19).jpg", "Quick Share Jun 08 2025 (10).jpg"],
+      category: "home",
+    },
+    {
+      id: 13,
+      name: "IKEA Bundt Cake Pan",
+      desc: "Non-stick bundt/jelly mould. Used once, in excellent condition.",
+      price: 8.00, origPrice: null,
+      images: ["Quick Share Jun 08 2025 (16).jpg"],
+      category: "home",
+    },
+    {
+      id: 14,
+      name: "Tupperware Container",
+      desc: "Large oval Tupperware container with red lid. Microwave and dishwasher safe.",
+      price: 8.00, origPrice: null,
+      images: ["Quick Share Jun 08 2025 (17).jpg", "Quick Share Jun 08 2025 (8).jpg"],
+      category: "home",
+    },
+    // ── BABY ──────────────────────────────────────────────────
+    {
+      id: 16,
+      name: "Momcozy S12 Pro Wearable Breast Pump",
+      desc: "Hands-free wearable breast pump. Comes with all original parts. Thoroughly cleaned.",
+      price: 80.00, origPrice: null,
+      images: ["PHOTO-2026-03-07-15-47-12_1.jpg"],
+      category: "baby",
+    },
+    {
+      id: 17,
+      name: "Momcozy Temp-Sensing Milk Storage Bags — 50pk",
+      desc: "Unopened box of 50 temp-sensing milk storage bags. 6oz capacity, colour-changing indicator.",
+      price: 12.00, origPrice: null,
+      images: ["PHOTO-2026-03-07-15-47-12.jpg"],
+      category: "baby",
+    },
+    {
+      id: 18,
+      name: "Mamas & Papas Cot Mobile — Welcome to the World",
+      desc: "Musical cot mobile with cloud, elephant & felt balls. Suitable 0–5 months. Excellent condition, all parts included.",
+      price: 50.00, origPrice: 129.95,
+      images: ["mamas and papas 1.jpg", "mamas and papas 2.jpg", "mamas and papas 3.jpg", "Mamas and Papas.jpg"],
+      category: "baby",
+      badge: "Sale",
+    },
+    {
+      id: 19,
+      name: "Floral Baby Muslin Wrap & Pillow",
+      desc: "Soft floral muslin wrap and matching baby pillow. Gentle wash, great condition.",
+      price: 15.00, origPrice: null,
+      images: ["PHOTO-2026-03-07-15-46-37_5.jpg", "PHOTO-2026-03-07-15-46-37_6.jpg"],
+      category: "baby",
     },
   ];
 
@@ -674,6 +757,7 @@
         <button class="filter-btn" onclick="applyFilter('home',this)">Home</button>
         <button class="filter-btn" onclick="applyFilter('sports',this)">Sports</button>
         <button class="filter-btn" onclick="applyFilter('beauty',this)">Beauty & Hair</button>
+        <button class="filter-btn" onclick="applyFilter('baby',this)">Baby</button>
       </div>
       <div class="products" id="product-grid"></div>
     `;
