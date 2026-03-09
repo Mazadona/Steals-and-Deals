@@ -805,9 +805,10 @@
   }
 
   function renderGrid() {
-    const list = activeFilter === "all"
+    const list = (activeFilter === "all"
       ? products
-      : products.filter(p => p.category === activeFilter);
+      : products.filter(p => p.category === activeFilter)
+    ).slice().sort((a, b) => a.id - b.id);
 
     const grid = document.getElementById("product-grid");
     if (!grid) return;
