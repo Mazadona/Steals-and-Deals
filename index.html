@@ -273,6 +273,16 @@
       padding: 3px 10px; border-radius: 20px;
       text-transform: uppercase; letter-spacing: .5px; z-index: 2;
     }
+    .condition-badge {
+      display: inline-block;
+      font-size: .7rem; font-weight: 700;
+      padding: 2px 9px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: .4px;
+      margin-bottom: 4px;
+    }
+    .condition-new       { background: #d4f5e2; color: #1a7a45; }
+    .condition-like-new  { background: #dbeeff; color: #1455a4; }
+    .condition-good      { background: #fff3d6; color: #9a6200; }
 
     .card-body {
       padding: 20px; flex: 1;
@@ -583,28 +593,28 @@
       name: "Dell Premier Multi-device wireless keyboard and Mouse (KM7321W)",
       desc: "Experience superior multitasking features with a stylish and comfortable premium keyboard and mouse combo. Complete your tasks powered by one of the industry’s leading battery lives at up to 36 months.",
       price: 90.00, origPrice: 114.40,
-      images: ["keyboard mouse.jpg", "keyboard mouse 1.jpg"], category: "electronics", badge: "Sale",
+      images: ["keyboard mouse.jpg", "keyboard mouse 1.jpg"], category: "electronics", badge: "Sale", condition: "Good",
     },
     {
       id: 2,
       name: "Sombreros - 3 for $5",
       desc: "Or grab just one for $2 each. Great for parties!",
       price: 5.00, origPrice: null,
-      images: ["Somboreros.jpg", "Sombrero 1.jpg", "sombrero 2.jpg"], category: "fashion",
+      images: ["Somboreros.jpg", "Sombrero 1.jpg", "sombrero 2.jpg"], category: "fashion", condition: "Like New",
     },
     {
       id: 3,
       name: "Hot Tools Blowout brush pro ",
       desc: "Great condition, perfect for drying and styling hair with salon-style volume and smoothness in one step.Includes protective travel case and AU plug — easy to use for quick at-home blowouts.",
       price: 80.00, origPrice: null,
-      images: ["Hot Tools Blowout brush pro.jpg", "Hot Tools Blowout brush pro 1.jpg", "Hot Tools Blowout brush pro 2.jpg", "Hot Tools Blowout brush pro 3.jpg"], category: "beauty",
+      images: ["Hot Tools Blowout brush pro.jpg", "Hot Tools Blowout brush pro 1.jpg", "Hot Tools Blowout brush pro 2.jpg", "Hot Tools Blowout brush pro 3.jpg"], category: "beauty", condition: "Good",
     },
     {
       id: 4,
       name: "Kingbike Helmet",
       desc: "Lightweight and durable bike helmet. Comes with its own storage bag. Great condition.",
       price: 20.00, origPrice: null,
-      images: ["bike helmet.jpg", "bike helmet bag.jpg", "Kingbike helmet 1.jpg"], category: "sports",
+      images: ["bike helmet.jpg", "bike helmet bag.jpg", "Kingbike helmet 1.jpg"], category: "sports", condition: "Like New",
     },
     {
       id: 5,
@@ -612,21 +622,21 @@
       desc: "Size 12. Flexible E5 and E4 neoprene with flash lining for warmth and comfort, natural rubber-based foam and recycled linings, durable GB seams with critical stress point taping.",
       price: 200.00, origPrice: 450.00,
       images: ["Wetsuit.jpg", "Wetsuit 1.jpg", "wetsuit 2.jpg", "Wetsuit tag.jpg"],
-      category: "fashion", badge: "Sale",
+      category: "fashion", badge: "Sale", condition: "New",
     },
     {
       id: 6,
       name: "S10 Pen Pro Samsung (EJ-P5450)",
       desc: "Samsung S Pen Pro (Black) with Bluetooth connectivity, allowing seamless writing and Air Actions across compatible Galaxy phones, tablets, and PCs.Rechargeable via USB-C with up to 16 days of battery life and SmartThings tracking to help locate your pen.",
       price: 40.00, origPrice: null,
-      images: ["Styles s pen pro.jpg", "Styles s pen.jpg"], category: "electronics",
+      images: ["Styles s pen pro.jpg", "Styles s pen.jpg"], category: "electronics", condition: "Like New",
     },
     {
       id: 7,
       name: "Trigger Point Grid 1.0 Foam Roller",
       desc: "TriggerPoint Foam Roller (Pink) ideal for muscle recovery, stretching, and relieving tight muscles after workouts.Durable, lightweight, and great for home use, yoga, or physiotherapy.",
       price: 30.00, origPrice: null,
-      images: ["Trigger point.jpg"], category: "sports",
+      images: ["Trigger point.jpg"], category: "sports", condition: "Like New",
     },
     {
       id: 8,
@@ -642,7 +652,7 @@
       desc: "1.7L BPA-free electric kettle. Clean and in great working condition.",
       price: 25.00, origPrice: null,
       images: ["Breville Kettle.jpg", "Breville Kettle 1.jpg"],
-      category: "home",
+      category: "home", condition: "Like New",
     },
     {
       id: 10,
@@ -650,7 +660,7 @@
       desc: "40oz Stanley Adventure Quencher. Keeps drinks cold all day. Includes straw. Barely used.",
       price: 35.00, origPrice: null,
       images: ["Stanley.jpg", "Stanley 1.jpg", "Stanley 2.jpg"],
-      category: "home",
+      category: "home", condition: "Like New",
     },
     {
       id: 11,
@@ -658,7 +668,7 @@
       desc: "Ribbed glass tealight holders in green, pink, and dark purple. Perfect for decorating.",
       price: 15.00, origPrice: null,
       images: ["Candles holders.jpg"],
-      category: "home",
+      category: "home", condition: "New",
     },
     {
       id: 12,
@@ -666,7 +676,7 @@
       desc: "Crisp & fresh salad spinner. Clean condition, works perfectly.",
       price: 10.00, origPrice: null,
       images: ["Quick Share Jun 08 2025 (19).jpg", "Quick Share Jun 08 2025 (10).jpg"],
-      category: "home",
+      category: "home", condition: "Like New",
     },
     {
       id: 13,
@@ -682,7 +692,7 @@
       desc: "Large oval Tupperware container with red lid. Microwave and dishwasher safe.",
       price: 8.00, origPrice: null,
       images: ["Quick Share Jun 08 2025 (17).jpg", "Quick Share Jun 08 2025 (8).jpg"],
-      category: "home",
+      category: "home", condition: "Like New",
     },
     // ── BABY ──────────────────────────────────────────────────
     {
@@ -691,7 +701,7 @@
       desc: "Hands-free wearable breast pump. Comes with all original parts. Thoroughly cleaned.",
       price: 80.00, origPrice: null,
       images: ["PHOTO-2026-03-07-15-47-12_1.jpg"],
-      category: "baby",
+      category: "baby", condition: "New",
     },
     {
       id: 17,
@@ -699,7 +709,7 @@
       desc: "Unopened box of 50 temp-sensing milk storage bags. 6oz capacity, colour-changing indicator.",
       price: 12.00, origPrice: null,
       images: ["PHOTO-2026-03-07-15-47-12.jpg"],
-      category: "baby",
+      category: "baby", condition: "New",
     },
     {
       id: 18,
@@ -707,7 +717,7 @@
       desc: "New in box and wrapping — never opened! Features an adorable plush elephant character with pointelle cloud hanging elements and playful pom pom detailing. Gentle lullaby to help baby drift off. Suitable from birth to ~5 months. Coordinates beautifully with the Welcome to the World interiors collection. Pickup Waterloo or Zetland.",
       price: 85.00, origPrice: 130.00,
       images: ["mamas and papas 1.jpg", "mamas and papas 2.jpg", "mamas and papas 3.jpg", "Mamas and Papas.jpg"],
-      category: "baby",
+      category: "baby", condition: "New",
       badge: "Sale",
     },
     {
@@ -716,7 +726,7 @@
       desc: "Soft floral muslin wrap and matching baby pillow. Gentle wash, great condition.",
       price: 15.00, origPrice: null,
       images: ["PHOTO-2026-03-07-15-46-37_5.jpg", "PHOTO-2026-03-07-15-46-37_6.jpg"],
-      category: "baby",
+      category: "baby", condition: "New",
     },
     {
       id: 20,
@@ -724,7 +734,7 @@
       desc: "90 pieces of this amazing floor decking from IKEA! Completely transforms your outdoor area. See dimensions and details in the pictures and the IKEA website. Some pieces have minor scratches, hence the reduced price.",
       price: 189.00, origPrice: 350.00,
       images: ["IKEA RUNNEN Outdoor Decking.jpg", "IKEA RUNNEN Outdoor Decking (1).jpg", "IKEA RUNNEN Outdoor Decking (2).jpg", "IKEA RUNNEN Outdoor Decking (3).jpg", "IKEA RUNNEN Outdoor Decking (4).jpg", "IKEA RUNNEN Outdoor Decking (5).jpg", "floor deck.jpg", "floor deck 1.jpg"],
-      category: "home",
+      category: "home", condition: "Good",
     },
     {
       id: 21,
@@ -732,7 +742,7 @@
       desc: "Single bed from IKEA bought only one year ago — like new condition. Selling because upgrading to a larger size. Semi-disassembled, no issues at all. Comes with mattress. See dimensions in pictures.",
       price: 200.00, origPrice: null,
       images: ["BLÅKULLEN bed full view.jpg", "BLÅKULLEN bed with mattress front.jpg", "BLÅKULLEN bed side angle.jpg", "BLÅKULLEN bed frame slats.jpg", "BLÅKULLEN headboard close.jpg", "BLÅKULLEN bed product photo.jpg", "BLÅKULLEN bed lifestyle.jpg", "BLÅKULLEN bed dimensions.jpg"],
-      category: "home",
+      category: "home", condition: "Like New",
     },
     {
       id: 22,
@@ -740,7 +750,7 @@
       desc: "Almost new Le Creuset Non-Stick Grill 34cm — barely used, like new condition. A premium kitchen essential at a fraction of the original price.",
       price: 149.00, origPrice: 360.00,
       images: ["Le Creuset grill product photo.jpg", "Le Creuset grill top down.jpg", "Le Creuset grill angle.jpg", "Le Creuset grill surface.jpg", "Le Creuset grill handle.jpg", "Le Creuset grill bottom.jpg"],
-      category: "home",
+      category: "home", condition: "Like New",
     },
     {
       id: 23,
@@ -748,7 +758,7 @@
       desc: "Brand new, never used Tefal non-stick wok with glass lid. Black, with Tefal's signature Thermo-Spot heat indicator. A great kitchen upgrade still in perfect condition.",
       price: 90.00, origPrice: 110.00,
       images: ["Tefal Pan with Lid (1).jpg", "Tefal Pan with Lid.jpg", "New Tefal Pan with Lid.jpg", "New Tefal Pan with Lid (1).jpg"],
-      category: "home", badge: "Sale",
+      category: "home", badge: "Sale", condition: "New",
     },
     {
       id: 24,
@@ -756,7 +766,7 @@
       desc: "Used but in excellent condition — no issues at all! Stunning L-shaped sofa/couch in a rich coffee colour. Got it home and it didn't fit the setup, so it's barely been sat on. Dimensions: 2.9m total, lounge section 1.5m. Bought from Sydney Home Furnishings — this colour is now out of stock. Cleaned and ready for pickup from Waterloo. Happy to send more pics or videos on request.",
       price: 850.00, origPrice: 2200.00,
       images: ["Noosa L Shaped Sofa.jpg", "Noosa L Shaped Sofa (1).jpg", "Noosa L Shaped Sofa (2).jpg", "Noosa L Shaped Sofa (3).jpg"],
-      category: "home",
+      category: "home", condition: "Like New",
     },
   ];
 
@@ -934,6 +944,7 @@
           ${isSold ? `<div class="sold-overlay"><div class="sold-stamp">SOLD</div></div>` : ""}
           <div class="card-body">
             <span class="card-category">${p.category}</span>
+            ${p.condition ? `<span class="condition-badge condition-${p.condition.toLowerCase().replace(/ /g,"-")}">${p.condition}</span>` : ""}
             <div class="card-name">${p.name}</div>
             <div class="card-desc">${p.desc}</div>
           </div>
