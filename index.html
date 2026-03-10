@@ -185,7 +185,11 @@
       transform: translateY(-4px);
       box-shadow: 0 12px 32px rgba(0,0,0,.12);
     }
-    .card-sold { opacity: 0.55; }
+    .card-sold { opacity: 0.75; }
+    .card-sold .card-image,
+    .card-sold .carousel-track img {
+      filter: grayscale(55%) brightness(0.92);
+    }
 
     .card-image {
       width: 100%; aspect-ratio: 1/1;
@@ -213,18 +217,9 @@
     .status-reserved  { background: #fef3c7; color: #b45309; }
     .status-sold      { background: #f3f4f6; color: #4b5563; }
 
-    /* ── SOLD OVERLAY ── */
-    .sold-overlay {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 3; pointer-events: none;
-    }
-    .sold-stamp {
-      background: var(--primary); color: #fff;
-      font-size: 1.5rem; font-weight: 900;
-      padding: 10px 26px; border-radius: 8px;
-      letter-spacing: 4px; transform: rotate(-12deg); opacity: 0.82;
-    }
+    /* ── SOLD OVERLAY (kept for potential future use) ── */
+    .sold-overlay { display: none; }
+    .sold-stamp   { display: none; }
 
     /* ── CAROUSEL ── */
     .carousel {
@@ -331,11 +326,22 @@
       padding: 11px 14px; font-size: .82rem; font-weight: 700;
       cursor: default; text-align: center;
     }
+    /* ── SOLD STATE ── Change text here to update the sold button label */
     .btn-sold-display {
-      background: #f3f4f6; color: #6b7280;
-      border: none; border-radius: 10px;
-      padding: 11px 14px; font-size: .82rem; font-weight: 700;
-      cursor: default; text-align: center;
+      background: #1f2937; color: #fff;
+      border: none; border-radius: 10px; height: 40px;
+      font-size: .82rem; font-weight: 600;
+      cursor: not-allowed; text-align: center;
+      width: 100%; display: flex; align-items: center; justify-content: center;
+      letter-spacing: .02em; opacity: 0.85;
+    }
+    /* ── SOLD BADGE (top-left) ── Change background/color here */
+    .badge-sold {
+      position: absolute; top: 10px; left: 10px;
+      background: #1f2937; color: #fff;
+      font-size: 11px; font-weight: 700;
+      padding: 4px 8px; border-radius: 999px;
+      text-transform: uppercase; letter-spacing: .4px; z-index: 3;
     }
 
     /* ── MESSAGE MODAL ── */
@@ -877,7 +883,12 @@
     const list = (activeFilter === "all"
       ? products
       : products.filter(p => p.category === activeFilter)
-    ).slice().sort((a, b) => a.id - b.id);
+    ).slice().sort((a, b) => {
+      const aSold = getStatus(a.id) === "sold" ? 1 : 0;
+      const bSold = getStatus(b.id) === "sold" ? 1 : 0;
+      if (aSold !== bSold) return aSold - bSold; // sold items sink to bottom
+      return a.id - b.id;                         // otherwise sort by ID
+    });
 
     const grid = document.getElementById("product-grid");
     if (!grid) return;
@@ -936,13 +947,15 @@
 
       return `
         <div class="card${isSold ? " card-sold" : ""}">
-          ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ""}
+          ${isSold
+            ? `<span class="badge-sold">Sold</span>`
+            : p.badge ? `<span class="product-badge">${p.badge}</span>` : ""}
+          ${!isSold ? `
           <div class="badge-stack">
             <span class="status-badge status-${status}">${statusLabel}</span>
             ${p.condition ? `<span class="condition-badge condition-${p.condition.toLowerCase().replace(/ /g,"-")}">${p.condition}</span>` : ""}
-          </div>
+          </div>` : ""}
           ${imgHtml}
-          ${isSold ? `<div class="sold-overlay"><div class="sold-stamp">SOLD</div></div>` : ""}
           <div class="card-body">
             <span class="card-category">${p.category}</span>
             <div class="card-name">${p.name}</div>
@@ -1135,9 +1148,10 @@
     el.innerHTML = products.map(p => {
       const status = getStatus(p.id);
       const expiry = getReservationExpiry(p.id);
-      const thumb  = p.image
-        ? `<img class="admin-thumb-img" src="${p.image}" alt="${p.name}" />`
-        : `<span class="admin-thumb-emoji">${p.emoji}</span>`;
+      const thumbSrc = p.images?.[0] || p.image;
+      const thumb = thumbSrc
+        ? `<img class="admin-thumb-img" src="${thumbSrc}" alt="${p.name}" />`
+        : `<span class="admin-thumb-emoji">${p.emoji || "📦"}</span>`;
 
       const timerHtml = (status === "reserved" && expiry)
         ? `<span class="reservation-timer">⏳ until ${formatExpiry(expiry)}</span>`
@@ -1174,6 +1188,7 @@
       await deleteFirebase(`reservations/${id}`);
     }
     renderAdminList();
+    renderGrid();
     showToast(`Saved: ${status}`);
   }
 
@@ -1184,6 +1199,7 @@
     await setFirebase(`statuses/${id}`, "reserved");
     await setFirebase(`reservations/${id}`, expiry);
     renderAdminList();
+    renderGrid();
     showToast(`Reserved until ${formatExpiry(expiry)}`);
   }
 
@@ -1193,6 +1209,7 @@
     await setFirebase(`statuses/${id}`, "sold");
     await deleteFirebase(`reservations/${id}`);
     renderAdminList();
+    renderGrid();
     showToast("Marked as sold");
   }
 
