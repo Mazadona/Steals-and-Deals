@@ -175,31 +175,39 @@
     /* ── CARD ── */
     .card {
       background: var(--surface); border-radius: var(--radius);
-      box-shadow: var(--shadow); overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.08);
+      overflow: hidden;
       display: flex; flex-direction: column;
       transition: transform .25s, box-shadow .25s;
       position: relative;
     }
     .card:not(.card-sold):hover {
-      transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.11);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,.12);
     }
     .card-sold { opacity: 0.55; }
 
     .card-image {
-      width: 100%; aspect-ratio: 4/3;
+      width: 100%; aspect-ratio: 1/1;
       object-fit: cover; background: #f0eeea; display: block;
+      transition: transform .35s ease;
     }
+    .card:hover .card-image { transform: scale(1.03); }
     img.card-image { cursor: zoom-in; }
     .card-image.placeholder {
       display: flex; align-items: center; justify-content: center; font-size: 3.5rem;
     }
 
     /* ── STATUS BADGE ── */
+    .badge-stack {
+      position: absolute; top: 10px; right: 10px;
+      display: flex; flex-direction: row; align-items: center;
+      gap: 4px; z-index: 2; flex-wrap: wrap; justify-content: flex-end;
+    }
     .status-badge {
-      position: absolute; top: 12px; right: 12px;
-      font-size: .7rem; font-weight: 800;
-      padding: 4px 10px; border-radius: 20px;
-      text-transform: uppercase; letter-spacing: .5px; z-index: 2;
+      font-size: 11px; font-weight: 700;
+      padding: 4px 8px; border-radius: 999px;
+      text-transform: uppercase; letter-spacing: .4px;
     }
     .status-available { background: #dcfce7; color: #15803d; }
     .status-reserved  { background: #fef3c7; color: #b45309; }
@@ -222,7 +230,7 @@
     .carousel {
       position: relative;
       overflow: hidden;
-      aspect-ratio: 4/3;
+      aspect-ratio: 1/1;
       background: #f0eeea;
     }
     .carousel-track {
@@ -234,7 +242,9 @@
       min-width: 100%; width: 100%;
       height: 100%; object-fit: cover;
       flex-shrink: 0; cursor: zoom-in; display: block;
+      transition: transform .35s ease;
     }
+    .card:hover .carousel-track img { transform: scale(1.03); }
     .carousel-btn {
       position: absolute; top: 50%; transform: translateY(-50%);
       background: rgba(255,255,255,.88); border: none; border-radius: 50%;
@@ -248,16 +258,8 @@
     .carousel-btn:hover { background: #fff; transform: translateY(-50%) scale(1.08); }
     .carousel-prev { left: 8px; }
     .carousel-next { right: 8px; }
-    .carousel-dots {
-      position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-      display: flex; gap: 5px; z-index: 5;
-    }
-    .dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: rgba(255,255,255,.55); transition: background .2s, transform .2s;
-      cursor: pointer;
-    }
-    .dot.active { background: #fff; transform: scale(1.3); }
+    .carousel-dots { display: none; }
+    .dot { display: none; }
     .carousel-count {
       position: absolute; bottom: 8px; right: 10px;
       background: rgba(0,0,0,.45); color: #fff;
@@ -274,23 +276,21 @@
       text-transform: uppercase; letter-spacing: .5px; z-index: 2;
     }
     .condition-badge {
-      display: inline-block;
-      font-size: .7rem; font-weight: 700;
-      padding: 2px 9px; border-radius: 20px;
+      font-size: 11px; font-weight: 700;
+      padding: 4px 8px; border-radius: 999px;
       text-transform: uppercase; letter-spacing: .4px;
-      margin-bottom: 4px;
     }
-    .condition-new       { background: #d4f5e2; color: #1a7a45; }
-    .condition-like-new  { background: #dbeeff; color: #1455a4; }
-    .condition-good      { background: #fff3d6; color: #9a6200; }
+    .condition-new       { background: #E3F2FD; color: #1565C0; }
+    .condition-like-new  { background: #E8F5E9; color: #2E7D32; }
+    .condition-good      { background: #FFF4E5; color: #B26A00; }
 
     .card-body {
       padding: 20px; flex: 1;
       display: flex; flex-direction: column; gap: 8px;
     }
     .card-category {
-      font-size: .72rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .6px; color: var(--accent);
+      font-size: 12px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .08em; color: #9a6c49;
     }
     .card-name  { font-size: 1.05rem; font-weight: 700; letter-spacing: -.2px; }
     .card-desc  { font-size: .88rem; color: var(--muted); line-height: 1.55; flex: 1; }
@@ -299,10 +299,15 @@
       padding: 0 20px 20px;
       display: flex; flex-direction: column; gap: 10px;
     }
-    .price { font-size: 1.3rem; font-weight: 800; letter-spacing: -.5px; }
-    .price .orig {
-      font-size: .85rem; color: var(--muted);
-      text-decoration: line-through; font-weight: 500; margin-left: 6px;
+    .price {
+      display: flex; flex-direction: column; gap: 1px;
+    }
+    .price-main {
+      font-size: 24px; font-weight: 800; letter-spacing: -.5px; line-height: 1;
+    }
+    .price-orig {
+      font-size: 14px; color: var(--muted);
+      text-decoration: line-through; font-weight: 400;
     }
 
     /* ── ACTION BUTTONS ── */
@@ -310,15 +315,15 @@
 
     .btn-enquire, .btn-buy {
       flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
-      border: none; border-radius: 10px; padding: 11px 8px;
-      font-size: .82rem; font-weight: 700; cursor: pointer;
+      border: none; border-radius: 10px; height: 40px; padding: 0 8px;
+      font-size: .82rem; font-weight: 600; cursor: pointer;
       transition: background .2s, transform .1s; color: #fff;
     }
     .btn-enquire:active, .btn-buy:active { transform: scale(.97); }
     .btn-enquire { background: var(--teal); }
-    .btn-enquire:hover { background: #176361; }
+    .btn-enquire:hover { background: #256f6a; }
     .btn-buy { background: var(--slack); }
-    .btn-buy:hover { background: var(--slack-hover); }
+    .btn-buy:hover { background: #4a1240; }
 
     .btn-reserved-display {
       background: #fef3c7; color: #b45309;
@@ -939,19 +944,21 @@
       return `
         <div class="card${isSold ? " card-sold" : ""}">
           ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ""}
-          <span class="status-badge status-${status}">${statusLabel}</span>
+          <div class="badge-stack">
+            <span class="status-badge status-${status}">${statusLabel}</span>
+            ${p.condition ? `<span class="condition-badge condition-${p.condition.toLowerCase().replace(/ /g,"-")}">${p.condition}</span>` : ""}
+          </div>
           ${imgHtml}
           ${isSold ? `<div class="sold-overlay"><div class="sold-stamp">SOLD</div></div>` : ""}
           <div class="card-body">
             <span class="card-category">${p.category}</span>
-            ${p.condition ? `<span class="condition-badge condition-${p.condition.toLowerCase().replace(/ /g,"-")}">${p.condition}</span>` : ""}
             <div class="card-name">${p.name}</div>
             <div class="card-desc">${p.desc}</div>
           </div>
           <div class="card-footer">
             <div class="price">
-              $${p.price.toFixed(2)}
-              ${p.origPrice ? `<span class="orig">$${p.origPrice.toFixed(2)}</span>` : ""}
+              <span class="price-main">$${p.price % 1 === 0 ? p.price : p.price.toFixed(2)}</span>
+              ${p.origPrice ? `<span class="price-orig">$${p.origPrice % 1 === 0 ? p.origPrice : p.origPrice.toFixed(2)}</span>` : ""}
             </div>
             ${footerActions}
           </div>
