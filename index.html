@@ -93,9 +93,58 @@
       border-radius: 50%;
       box-shadow: 0 8px 32px rgba(0,0,0,.16), 0 0 0 3px #ffffff, 0 0 0 5px var(--border);
     }
+    .pickup-card {
+      flex-shrink: 0;
+      width: clamp(200px, 24vw, 280px);
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.07);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .pickup-card-title {
+      font-size: .72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      color: var(--accent);
+    }
+    .pickup-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .pickup-icon {
+      font-size: 1.2rem;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+    .pickup-row p {
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 0;
+      max-width: none;
+    }
+    .pickup-row p strong {
+      display: block;
+      font-weight: 700;
+      color: var(--text, #1a1a1a);
+      font-size: .88rem;
+    }
+    .pickup-note {
+      font-size: .78rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      line-height: 1.5;
+    }
     @media (max-width: 700px) {
       .hero { flex-direction: column; align-items: flex-start; }
-      .hero-logo { width: 140px; align-self: flex-end; margin-top: -20px; }
+      .pickup-card { width: 100%; }
     }
 
     /* ── FILTERS ── */
@@ -788,6 +837,18 @@
           <span class="hero-tag">Everything Must Go!</span>
           <h1>Find what you<br/>love. Steal it!</h1>
           <p>Huge savings today! Browse our items and reach out via Slack to enquire or buy. We'll get back to you right away.</p>
+        </div>
+        <div class="pickup-card">
+          <div class="pickup-card-title">📦 Pickup & Delivery</div>
+          <div class="pickup-row">
+            <span class="pickup-icon">📍</span>
+            <p><strong>Pickup — Waterloo NSW 2017</strong>Available for all items. Arrange a time after we agree on the sale.</p>
+          </div>
+          <div class="pickup-row">
+            <span class="pickup-icon">🏢</span>
+            <p><strong>Delivery — Surry Hills Office</strong>Available for select items. Drop-off to the office can be arranged.</p>
+          </div>
+          <p class="pickup-note">All logistics are upon agreement with the Canvanaut. Just mention your preference when you enquire or buy!</p>
         </div>
       </section>
       <div class="filters">
