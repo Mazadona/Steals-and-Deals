@@ -593,7 +593,7 @@
   const FIREBASE_URL  = "https://steals-and-deals-f7545-default-rtdb.asia-southeast1.firebasedatabase.app";
   const SLACK_DM_URL  = "https://canva.enterprise.slack.com/archives/D03N5D9JJJZ";
   const SELLER_NAME   = "Maz";
-  const RESERVATION_HOURS = 2;
+  const RESERVATION_HOURS = 24;
 
   // ══════════════════════════════════════════════════════════════
   // PRODUCT DATA
@@ -1186,7 +1186,7 @@
             <button class="status-toggle ${status === "available" ? "st-available" : ""}"
               onclick="adminSet(${p.id},'available')">✓ Available</button>
             <button class="status-toggle ${status === "reserved" ? "st-reserved" : ""}"
-              onclick="adminReserve(${p.id})">⏳ Reserve 2hrs</button>
+              onclick="adminReserve(${p.id})">⏳ Reserve 24hrs</button>
             <button class="status-toggle ${status === "sold" ? "st-sold" : ""}"
               onclick="adminSold(${p.id})">✗ Sold</button>
             ${timerHtml}
