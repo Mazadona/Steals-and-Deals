@@ -63,37 +63,6 @@
     .logo-steals, .logo-deals { color: #c42b2b; }
     .logo-amp { color: #1a2a4a; font-size: 1.4rem; }
 
-    /* ── MARQUEE ── */
-    .marquee-bar {
-      background: #1a2a4a;
-      color: #ffffff;
-      overflow: hidden;
-      white-space: nowrap;
-      padding: 10px 0;
-      font-size: .88rem;
-      font-weight: 600;
-      letter-spacing: .3px;
-      position: relative;
-      border-bottom: 2px solid #c42b2b;
-    }
-    .marquee-track {
-      display: inline-flex;
-      gap: 0;
-      animation: marquee-scroll 28s linear infinite;
-    }
-    .marquee-bar:hover .marquee-track { animation-play-state: paused; }
-    .marquee-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0 48px;
-    }
-    .marquee-sep { color: #c42b2b; font-size: 1.1rem; }
-    @keyframes marquee-scroll {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
     /* ── HERO ── */
     .hero {
       max-width: 1200px; margin: 0 auto;
@@ -1023,18 +992,6 @@
 
   function renderShop() {
     document.getElementById("app").innerHTML = `
-      <div class="marquee-bar" aria-label="Delivery announcement">
-        <div class="marquee-track">
-          ${Array(6).fill(`
-            <span class="marquee-item">🚚 Office delivery available this week!</span>
-            <span class="marquee-sep">★</span>
-            <span class="marquee-item">📅 Wednesday 18 March &amp; Thursday 19 March</span>
-            <span class="marquee-sep">★</span>
-            <span class="marquee-item">📍 Delivery to Surry Hills office — enquire to arrange</span>
-            <span class="marquee-sep">★</span>
-          `).join('')}
-        </div>
-      </div>
       <section class="hero">
         <div class="hero-text">
           <span class="hero-tag">Everything Must Go!</span>
