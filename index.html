@@ -194,6 +194,22 @@
       box-shadow: 0 12px 32px rgba(0,0,0,.12);
     }
     .card-sold { opacity: 0.75; }
+    .card-link-btn {
+      position: absolute; top: 10px; right: 10px; z-index: 5;
+      background: rgba(255,255,255,.88); backdrop-filter: blur(4px);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 5px 8px; font-size: .75rem; cursor: pointer;
+      color: var(--muted); line-height: 1;
+      transition: background .15s, color .15s;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .card-link-btn:hover { background: #fff; color: var(--accent); border-color: var(--accent); }
+    @keyframes product-highlight {
+      0%   { box-shadow: 0 0 0 4px var(--accent), 0 12px 32px rgba(0,0,0,.12); }
+      60%  { box-shadow: 0 0 0 4px var(--accent), 0 12px 32px rgba(0,0,0,.12); }
+      100% { box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.08); }
+    }
+    .card-highlight { animation: product-highlight 2.2s ease-out forwards; }
     .card-sold .card-image,
     .card-sold .carousel-track img {
       filter: grayscale(55%) brightness(0.92);
@@ -1092,7 +1108,8 @@
       }
 
       return `
-        <div class="card${isSold ? " card-sold" : ""}">
+        <div class="card${isSold ? " card-sold" : ""}" id="product-card-${p.id}">
+          <button class="card-link-btn" onclick="copyProductLink(${p.id}, this)" title="Copy link to this item">🔗</button>
           ${isSold
             ? `<span class="badge-sold">Sold</span>`
             : p.badge ? `<span class="product-badge">${p.badge}</span>` : ""}
@@ -1130,6 +1147,28 @@
 
   function pageUrl() {
     return window.location.origin + window.location.pathname;
+  }
+
+  function copyProductLink(id, btn) {
+    const url = `${pageUrl()}?item=${id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = "✓ Copied!";
+      btn.style.color = "var(--accent)";
+      setTimeout(() => { btn.innerHTML = orig; btn.style.color = ""; }, 2000);
+    }).catch(() => {
+      prompt("Copy this link:", url);
+    });
+  }
+
+  function scrollToProduct(id) {
+    const el = document.getElementById(`product-card-${id}`);
+    if (!el) return;
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.classList.add("card-highlight");
+      el.addEventListener("animationend", () => el.classList.remove("card-highlight"), { once: true });
+    }, 300);
   }
 
   // ══════════════════════════════════════════════════════════════
@@ -1550,6 +1589,9 @@
       renderAdminPanel();
     } else {
       renderShop();
+      if (params.has("item")) {
+        scrollToProduct(parseInt(params.get("item")));
+      }
     }
   }
 
